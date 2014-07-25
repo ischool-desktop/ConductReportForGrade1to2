@@ -95,7 +95,7 @@
             this.btnOk.AccessibleRole = System.Windows.Forms.AccessibleRole.PushButton;
             this.btnOk.BackColor = System.Drawing.Color.Transparent;
             this.btnOk.ColorTable = DevComponents.DotNetBar.eButtonColor.OrangeWithBackground;
-            this.btnOk.Location = new System.Drawing.Point(205, 55);
+            this.btnOk.Location = new System.Drawing.Point(214, 55);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;

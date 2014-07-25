@@ -67,7 +67,7 @@ namespace ConductReportForGrade1to2
             sqlcmd += "left join course on course.id=sc_attend.ref_course_id ";
             sqlcmd += "where ref_student_id in (" + id + ") and course.school_year=" + _schoolYear + " and course.semester=" + _semester;
 
-            Dictionary<string, StudentObj> student_teacher = new Dictionary<string, StudentObj>();
+            Dictionary<string, StudentObj> student_subj_teacher = new Dictionary<string, StudentObj>();
             DataTable dt = _Q.Select(sqlcmd);
             foreach (DataRow row in dt.Rows)
             {
@@ -79,13 +79,27 @@ namespace ConductReportForGrade1to2
                 int i = 0;
                 int sequence = int.TryParse(row["sequence"] + "", out i) ? i : 4;
 
-                if (!student_teacher.ContainsKey(key))
+                if (!student_subj_teacher.ContainsKey(key))
                 {
-                    student_teacher.Add(key, new StudentObj(row));
+                    student_subj_teacher.Add(key, new StudentObj(row));
                 }
 
-                if (sequence > student_teacher[key].Sequence)
-                    student_teacher[key].TeacherName = teacher_name;
+                if (sequence > student_subj_teacher[key].Sequence)
+                    student_subj_teacher[key].TeacherName = teacher_name;
+            }
+
+            //取得指定學生的班級導師
+            Dictionary<string,string> student_class_teacher = new Dictionary<string,string>();
+            foreach (SemesterHistoryRecord r in K12.Data.SemesterHistory.SelectByStudentIDs(_ids))
+            {
+                foreach (SemesterHistoryItem item in r.SemesterHistoryItems)
+                {
+                    if (item.SchoolYear == _schoolYear && item.Semester == _semester)
+                    {
+                        if (!student_class_teacher.ContainsKey(item.RefStudentID))
+                            student_class_teacher.Add(item.RefStudentID, item.Teacher);
+                    }
+                }
             }
 
             //取得指定學生conduct record
@@ -137,20 +151,27 @@ namespace ConductReportForGrade1to2
                 Document temp = new Aspose.Words.Document(new MemoryStream(Properties.Resources.temp));
                 DocumentBuilder bu = new DocumentBuilder(temp);
 
-                bu.CellFormat.Width = 250;
                 bu.CellFormat.Borders.LineStyle = LineStyle.Double;
-                bu.MoveToMergeField("Start");
+                bu.MoveToMergeField("Conduct");
+                Table table = bu.StartTable();
 
                 foreach (string subject in subject_order)
                 {
-                    string teacherName = student_teacher.ContainsKey(obj.StudentID + "_" + subject) ? student_teacher[obj.StudentID + "_" + subject].TeacherName : "";
-                    Aspose.Words.Tables.Table table = bu.StartTable();
+                    string teacherName = student_subj_teacher.ContainsKey(obj.StudentID + "_" + subject) ? student_subj_teacher[obj.StudentID + "_" + subject].TeacherName : "";
+
+                    if (subject == "Homeroom")
+                        teacherName = student_class_teacher.ContainsKey(obj.StudentID) ? student_class_teacher[obj.StudentID] : "";
+
                     bu.InsertCell();
+                    table.AllowAutoFit = false;
+                    bu.CellFormat.Width = 10;
                     bu.Write("Term1");
                     bu.ParagraphFormat.Alignment = ParagraphAlignment.Center;
                     bu.InsertCell();
+                    bu.CellFormat.Width = 10;
                     bu.Write("Term2");
                     bu.InsertCell();
+                    bu.CellFormat.Width = 100;
                     bu.Write(subject.PadRight(40, ' ') + "Teacher: " + teacherName.PadRight(20, ' '));
                     bu.EndRow();
 
@@ -160,41 +181,83 @@ namespace ConductReportForGrade1to2
                             continue;
 
                         bu.InsertCell();
+                        bu.CellFormat.Width = 10;
                         bu.CellFormat.HorizontalMerge = Aspose.Words.Tables.CellMerge.First;
 
                         bu.InsertCell();
+                        bu.CellFormat.Width = 10;
                         bu.CellFormat.HorizontalMerge = Aspose.Words.Tables.CellMerge.Previous;
 
                         bu.InsertCell();
+                        bu.CellFormat.Width = 100;
                         bu.CellFormat.HorizontalMerge = Aspose.Words.Tables.CellMerge.None;
-
                         bu.Write(group);
                         bu.ParagraphFormat.Alignment = ParagraphAlignment.Center;
-                        bu.EndRow();
 
+                        bu.EndRow();
+                        
                         foreach (string title in _template[subject][group])
                         {
                             string key = subject + "_" + group + "_" + title;
 
                             bu.InsertCell();
+                            bu.CellFormat.Width = 10;
                             string term1_ans = obj.term1.ContainsKey(key) ? obj.term1[key] : "";
                             bu.Write(term1_ans);
                             bu.ParagraphFormat.Alignment = ParagraphAlignment.Center;
 
                             bu.InsertCell();
+                            bu.CellFormat.Width = 10;
                             string term2_ans = obj.term2.ContainsKey(key) ? obj.term2[key] : "";
                             bu.Write(term2_ans);
 
                             bu.InsertCell();
+                            bu.CellFormat.Width = 100;
                             bu.Write(title);
                             bu.ParagraphFormat.Alignment = ParagraphAlignment.Left;
 
                             bu.EndRow();
                         }
                     }
-
-                    bu.EndTable();
                 }
+
+                //Homeroom Teacher's Comment:
+                bu.InsertCell();
+                bu.CellFormat.Width = 120;
+                bu.Write("Homeroom Teacher's Comment:");
+                bu.ParagraphFormat.Alignment = ParagraphAlignment.Center;
+                bu.EndRow();
+
+                //Total Days of Absence
+                bu.InsertCell();
+                bu.CellFormat.Width = 120;
+                bu.Write("Total Days of Absence:");
+                bu.ParagraphFormat.Alignment = ParagraphAlignment.Left;
+                bu.EndRow();
+
+                //Comment Term1 and Term2 Title
+                bu.InsertCell();
+                bu.CellFormat.Width = 60;
+                bu.Write("Term1");
+                bu.ParagraphFormat.Alignment = ParagraphAlignment.Center;
+
+                bu.InsertCell();
+                bu.CellFormat.Width = 60;
+                bu.Write("Term2");
+                bu.EndRow();
+
+                //Comment Term1 and Term2 Content
+                bu.InsertCell();
+                bu.CellFormat.Width = 60;
+                bu.RowFormat.Height = 100;
+                bu.Write(obj.Comment1);
+                bu.ParagraphFormat.Alignment = ParagraphAlignment.Left;
+
+                bu.InsertCell();
+                bu.CellFormat.Width = 60;
+                bu.Write(obj.Comment2);
+                bu.EndRow();
+                bu.EndTable();
 
                 temp.MailMerge.Execute(mergeDic.Keys.ToArray(), mergeDic.Values.ToArray());
                 doc.Sections.Add(doc.ImportNode(temp.FirstSection, true));
@@ -347,6 +410,7 @@ namespace ConductReportForGrade1to2
             public static XmlDocument _xdoc;
             public Dictionary<string, string> term1 = new Dictionary<string, string>();
             public Dictionary<string, string> term2 = new Dictionary<string, string>();
+            public string Comment1, Comment2;
             public string StudentID;
             public StudentRecord Student;
             public ClassRecord Class;
@@ -372,6 +436,13 @@ namespace ConductReportForGrade1to2
                     subj = "Homeroom";
 
                 string term = record.Term;
+
+                //Comment
+                if (term == "1")
+                    Comment1 = record.Comment;
+
+                if (term == "2")
+                    Comment2 = record.Comment;
 
                 //XML
                 if (_xdoc == null)
