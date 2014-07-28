@@ -250,12 +250,12 @@ namespace ConductReportForGrade1to2
                 bu.InsertCell();
                 bu.CellFormat.Width = 60;
                 bu.RowFormat.Height = 100;
-                bu.Write(obj.Comment1);
+                bu.Write(obj.Comment1 + "");
                 bu.ParagraphFormat.Alignment = ParagraphAlignment.Left;
 
                 bu.InsertCell();
                 bu.CellFormat.Width = 60;
-                bu.Write(obj.Comment2);
+                bu.Write(obj.Comment2 + "");
                 bu.EndRow();
                 bu.EndTable();
 
