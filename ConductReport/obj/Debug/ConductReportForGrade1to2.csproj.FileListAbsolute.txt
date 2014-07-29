@@ -1,13 +1,5 @@
 D:\GitHub2\ConductReport\ConductReport\bin\Debug\ConductReportForGrade1to2.dll
 D:\GitHub2\ConductReport\ConductReport\bin\Debug\ConductReportForGrade1to2.pdb
-D:\GitHub2\ConductReport\ConductReport\bin\Debug\Aspose.Words_201402.dll
-D:\GitHub2\ConductReport\ConductReport\bin\Debug\FISCA.Data.dll
-D:\GitHub2\ConductReport\ConductReport\bin\Debug\FISCA.dll
-D:\GitHub2\ConductReport\ConductReport\bin\Debug\FISCA.Permission.dll
-D:\GitHub2\ConductReport\ConductReport\bin\Debug\FISCA.Presentation.dll
-D:\GitHub2\ConductReport\ConductReport\bin\Debug\FISCA.UDT.dll
-D:\GitHub2\ConductReport\ConductReport\bin\Debug\K12.Data.dll
-D:\GitHub2\ConductReport\ConductReport\bin\Debug\K12.Presentation.dll
 D:\GitHub2\ConductReport\ConductReport\obj\Debug\ConductReportForGrade1to2.Properties.Resources.resources
 D:\GitHub2\ConductReport\ConductReport\obj\Debug\ConductReportForGrade1to2.Reporter.resources
 D:\GitHub2\ConductReport\ConductReport\obj\Debug\ConductReportForGrade1to2.csproj.GenerateResource.Cache

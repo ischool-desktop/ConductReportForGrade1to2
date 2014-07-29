@@ -151,12 +151,14 @@ namespace ConductReportForGrade1to2
                 Document temp = new Aspose.Words.Document(new MemoryStream(Properties.Resources.temp));
                 DocumentBuilder bu = new DocumentBuilder(temp);
 
-                bu.CellFormat.Borders.LineStyle = LineStyle.Double;
+                //bu.CellFormat.Borders.LineStyle = LineStyle.Double;
+                bu.CellFormat.VerticalAlignment = CellVerticalAlignment.Center;
                 bu.MoveToMergeField("Conduct");
-                Table table = bu.StartTable();
+                //Table table = bu.StartTable();
 
                 foreach (string subject in subject_order)
                 {
+                    Table table = bu.StartTable();
                     string teacherName = student_subj_teacher.ContainsKey(obj.StudentID + "_" + subject) ? student_subj_teacher[obj.StudentID + "_" + subject].TeacherName : "";
 
                     if (subject == "Homeroom")
@@ -219,6 +221,8 @@ namespace ConductReportForGrade1to2
                             bu.EndRow();
                         }
                     }
+                    bu.EndTable();
+                    bu.Writeln();
                 }
 
                 //Homeroom Teacher's Comment:
@@ -249,12 +253,14 @@ namespace ConductReportForGrade1to2
                 //Comment Term1 and Term2 Content
                 bu.InsertCell();
                 bu.CellFormat.Width = 60;
+                bu.CellFormat.VerticalAlignment = CellVerticalAlignment.Top;
                 bu.RowFormat.Height = 100;
                 bu.Write(obj.Comment1 + "");
                 bu.ParagraphFormat.Alignment = ParagraphAlignment.Left;
 
                 bu.InsertCell();
                 bu.CellFormat.Width = 60;
+                bu.CellFormat.VerticalAlignment = CellVerticalAlignment.Top;
                 bu.Write(obj.Comment2 + "");
                 bu.EndRow();
                 bu.EndTable();
@@ -438,12 +444,15 @@ namespace ConductReportForGrade1to2
                 string term = record.Term;
 
                 //Comment
-                if (term == "1")
-                    Comment1 = record.Comment;
+                if (subj == "Homeroom")
+                {
+                    if (term == "1")
+                        Comment1 = record.Comment;
 
-                if (term == "2")
-                    Comment2 = record.Comment;
-
+                    if (term == "2")
+                        Comment2 = record.Comment;
+                }
+                
                 //XML
                 if (_xdoc == null)
                     _xdoc = new XmlDocument();

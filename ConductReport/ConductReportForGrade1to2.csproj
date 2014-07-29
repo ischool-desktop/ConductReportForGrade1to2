@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="Aspose.Words_201402">
       <HintPath>library\Aspose.Words_201402.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="CourseGradeB">
       <HintPath>library\CourseGradeB.dll</HintPath>
@@ -43,25 +44,32 @@
     </Reference>
     <Reference Include="FISCA">
       <HintPath>library\FISCA.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="FISCA.Data, Version=1.0.0.3, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Users\Cloud\Documents\Visual Studio 2013\Projects\AsposeUse\AsposeUse\library\FISCA.Data.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="FISCA.Permission">
       <HintPath>library\FISCA.Permission.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="FISCA.Presentation">
       <HintPath>library\FISCA.Presentation.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="FISCA.UDT">
       <HintPath>library\FISCA.UDT.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="K12.Data">
       <HintPath>library\K12.Data.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="K12.Presentation">
       <HintPath>library\K12.Presentation.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
