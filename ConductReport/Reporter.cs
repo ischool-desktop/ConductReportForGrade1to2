@@ -145,7 +145,7 @@ namespace ConductReportForGrade1to2
                 Dictionary<string, string> mergeDic = new Dictionary<string, string>();
                 mergeDic.Add("姓名", obj.Student.Name + "(" + obj.Student.StudentNumber + ")");
                 mergeDic.Add("班級", obj.Class.Name + "," + obj.Student.SeatNo);
-                mergeDic.Add("學年度", _schoolYear + "");
+                mergeDic.Add("學年度", (_schoolYear + 1911) + "-" + (_schoolYear + 1912));
                 mergeDic.Add("學期", _semester + "");
 
                 Document temp = new Aspose.Words.Document(new MemoryStream(Properties.Resources.temp));
