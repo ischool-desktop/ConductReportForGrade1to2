@@ -167,8 +167,30 @@ namespace ConductReportForGrade1to2
             //開始列印
             Document doc = new Document();
 
-            foreach (ConductObj obj in student_conduct.Values)
+            //排序
+            List<ConductObj> sortList = student_conduct.Values.ToList();
+
+            sortList.Sort(delegate(ConductObj x, ConductObj y)
             {
+                string xx = (x.Class.Name + "").PadLeft(20, '0');
+                xx += (x.Student.SeatNo + "").PadLeft(10, '0');
+                xx += (x.Student.Name + "").PadLeft(20, '0');
+
+                string yy = (y.Class.Name + "").PadLeft(20, '0');
+                yy += (y.Student.SeatNo + "").PadLeft(10, '0');
+                yy += (y.Student.Name + "").PadLeft(20, '0');
+
+                return xx.CompareTo(yy);
+            });
+
+            List<string> sortIDs = sortList.Select(x => x.Student.ID).ToList();
+
+            //foreach (ConductObj obj in student_conduct.Values)
+            foreach (string student_id in sortIDs)
+            {
+                //不應該會爆炸
+                ConductObj obj = student_conduct[student_id];
+
                 Dictionary<string, string> mergeDic = new Dictionary<string, string>();
                 mergeDic.Add("姓名", obj.Student.Name + "(" + obj.Student.StudentNumber + ")");
                 mergeDic.Add("班級", obj.Class.Name + "," + obj.Student.SeatNo);
