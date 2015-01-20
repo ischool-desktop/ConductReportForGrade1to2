@@ -207,6 +207,10 @@ namespace ConductReportForGrade1to2
 
                 foreach (string subject in subject_order)
                 {
+                    //該學生沒有此科目的conduct就跳過
+                    if (!obj.SubjectList.Contains(subject))
+                        continue;
+
                     Table table = bu.StartTable();
                     string teacherName = student_subj_teacher.ContainsKey(obj.StudentID + "_" + subject) ? student_subj_teacher[obj.StudentID + "_" + subject].TeacherName : "";
 
@@ -470,6 +474,7 @@ namespace ConductReportForGrade1to2
             public StudentRecord Student;
             public ClassRecord Class;
             public string PersonalDays, SickDays, SchoolDays;
+            public List<string> SubjectList;
 
             public ConductObj(ConductRecord record)
             {
@@ -483,6 +488,8 @@ namespace ConductReportForGrade1to2
 
                 if (Class == null)
                     Class = new ClassRecord();
+
+                SubjectList = new List<string>();
             }
 
             public void LoadRecord(ConductRecord record)
@@ -502,6 +509,9 @@ namespace ConductReportForGrade1to2
                     if (term == "2")
                         Comment2 = record.Comment;
                 }
+
+                if (!SubjectList.Contains(subj))
+                    SubjectList.Add(subj);
                 
                 //XML
                 if (_xdoc == null)
