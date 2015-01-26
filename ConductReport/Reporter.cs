@@ -35,7 +35,7 @@ namespace ConductReportForGrade1to2
             _A = new AccessHelper();
             _Q = new QueryHelper();
             _ids = ids;
-            _template = new Dictionary<string, Dictionary<string, List<string>>>();
+            //_template = new Dictionary<string, Dictionary<string, List<string>>>();
 
             _BW = new BackgroundWorker();
             _BW.DoWork += new DoWorkEventHandler(BW_DoWork);
@@ -53,7 +53,7 @@ namespace ConductReportForGrade1to2
             cboSchoolYear.Text = _schoolYear + "";
             cboSemester.Text = _semester + "";
 
-            LoadTemplate();
+            //LoadTemplate();
         }
 
         private void BW_DoWork(object sender, DoWorkEventArgs e)
@@ -84,7 +84,7 @@ namespace ConductReportForGrade1to2
                     student_subj_teacher.Add(key, new StudentObj(row));
                 }
 
-                if (sequence > student_subj_teacher[key].Sequence)
+                if (sequence < student_subj_teacher[key].Sequence)
                     student_subj_teacher[key].TeacherName = teacher_name;
             }
 
@@ -100,28 +100,6 @@ namespace ConductReportForGrade1to2
 
                 student_conduct[student_id].LoadRecord(record);
             }
-
-            //科目顯示順序
-            List<string> subject_order = _template.Keys.ToList();
-            subject_order.Sort(Tool.GetSubjectCompare());
-
-            //Group顯示順序
-            List<string> group_order = new List<string>();
-
-            foreach (string subj in subject_order)
-            {
-                foreach (string group in _template[subj].Keys)
-                {
-                    if (!group_order.Contains(group))
-                        group_order.Add(group);
-                }
-            }
-            group_order.Sort(delegate(string x, string y)
-            {
-                string xx = x.PadLeft(40, '0');
-                string yy = y.PadLeft(40, '0');
-                return xx.CompareTo(yy);
-            });
 
             //取得缺席天數
             DataTable absence_dt = _Q.Select("select id from _udt_table where name='ischool.elementaryabsence'");
@@ -190,6 +168,32 @@ namespace ConductReportForGrade1to2
             {
                 //不應該會爆炸
                 ConductObj obj = student_conduct[student_id];
+
+                _template = obj.Template;
+
+                //科目顯示順序
+                List<string> subject_order = _template.Keys.ToList();
+                subject_order.Sort(Tool.GetSubjectCompare());
+
+                //Group顯示順序
+                List<string> group_order = new List<string>();
+
+                foreach (string subj in subject_order)
+                {
+                    foreach (string group in _template[subj].Keys)
+                    {
+                        if (!group_order.Contains(group))
+                            group_order.Add(group);
+                    }
+                }
+
+                group_order.Sort(delegate(string x, string y)
+                {
+                    string xx = x.PadLeft(40, '0');
+                    string yy = y.PadLeft(40, '0');
+
+                    return xx.CompareTo(yy);
+                });
 
                 Dictionary<string, string> mergeDic = new Dictionary<string, string>();
                 mergeDic.Add("姓名", obj.Student.Name + "(" + obj.Student.StudentNumber + ")");
@@ -349,87 +353,87 @@ namespace ConductReportForGrade1to2
             }
         }
 
-        private void LoadTemplate()
-        {
-            List<ConductSetting> list = _A.Select<ConductSetting>("grade=2");
-            if (list.Count > 0)
-            {
-                ConductSetting setting = list[0];
+        //private void LoadTemplate()
+        //{
+        //    List<ConductSetting> list = _A.Select<ConductSetting>("grade=2");
+        //    if (list.Count > 0)
+        //    {
+        //        ConductSetting setting = list[0];
 
-                XmlDocument xdoc = new XmlDocument();
-                if (!string.IsNullOrWhiteSpace(setting.Conduct))
-                    xdoc.LoadXml(setting.Conduct);
+        //        XmlDocument xdoc = new XmlDocument();
+        //        if (!string.IsNullOrWhiteSpace(setting.Conduct))
+        //            xdoc.LoadXml(setting.Conduct);
 
-                Dictionary<string, List<string>> extraItem = new Dictionary<string, List<string>>();
+        //        Dictionary<string, List<string>> extraItem = new Dictionary<string, List<string>>();
 
-                //Add HRT item and get extra common item
-                foreach (XmlElement elem in xdoc.SelectNodes("//Conduct[@Common]"))
-                {
-                    string group = elem.GetAttribute("Group");
-                    bool common = elem.GetAttribute("Common") == "True" ? true : false;
+        //        //Add HRT item and get extra common item
+        //        foreach (XmlElement elem in xdoc.SelectNodes("//Conduct[@Common]"))
+        //        {
+        //            string group = elem.GetAttribute("Group");
+        //            bool common = elem.GetAttribute("Common") == "True" ? true : false;
 
-                    if (!_template.ContainsKey("Homeroom"))
-                        _template.Add("Homeroom", new Dictionary<string, List<string>>());
+        //            if (!_template.ContainsKey("Homeroom"))
+        //                _template.Add("Homeroom", new Dictionary<string, List<string>>());
 
-                    if (!_template["Homeroom"].ContainsKey(group))
-                        _template["Homeroom"].Add(group, new List<string>());
+        //            if (!_template["Homeroom"].ContainsKey(group))
+        //                _template["Homeroom"].Add(group, new List<string>());
 
-                    if (common)
-                    {
-                        if (!extraItem.ContainsKey(group))
-                            extraItem.Add(group, new List<string>());
-                    }
+        //            if (common)
+        //            {
+        //                if (!extraItem.ContainsKey(group))
+        //                    extraItem.Add(group, new List<string>());
+        //            }
 
-                    foreach (XmlElement item in elem.SelectNodes("Item"))
-                    {
-                        string title = item.GetAttribute("Title");
+        //            foreach (XmlElement item in elem.SelectNodes("Item"))
+        //            {
+        //                string title = item.GetAttribute("Title");
 
-                        if (!_template["Homeroom"][group].Contains(title))
-                            _template["Homeroom"][group].Add(title);
+        //                if (!_template["Homeroom"][group].Contains(title))
+        //                    _template["Homeroom"][group].Add(title);
 
-                        if (common)
-                        {
-                            if (!extraItem[group].Contains(title))
-                                extraItem[group].Add(title);
-                        }
-                    }
-                }
+        //                if (common)
+        //                {
+        //                    if (!extraItem[group].Contains(title))
+        //                        extraItem[group].Add(title);
+        //                }
+        //            }
+        //        }
 
-                //Add Subject Item
-                foreach (XmlElement elem in xdoc.SelectNodes("//Conduct[@Subject]"))
-                {
-                    string group = elem.GetAttribute("Group");
-                    string subject = elem.GetAttribute("Subject");
+        //        //Add Subject Item
+        //        foreach (XmlElement elem in xdoc.SelectNodes("//Conduct[@Subject]"))
+        //        {
+        //            string group = elem.GetAttribute("Group");
+        //            string subject = elem.GetAttribute("Subject");
 
-                    if (!_template.ContainsKey(subject))
-                        _template.Add(subject, new Dictionary<string, List<string>>());
+        //            if (!_template.ContainsKey(subject))
+        //                _template.Add(subject, new Dictionary<string, List<string>>());
 
-                    if (!_template[subject].ContainsKey(group))
-                        _template[subject].Add(group, new List<string>());
+        //            if (!_template[subject].ContainsKey(group))
+        //                _template[subject].Add(group, new List<string>());
 
-                    foreach (XmlElement item in elem.SelectNodes("Item"))
-                    {
-                        string title = item.GetAttribute("Title");
+        //            foreach (XmlElement item in elem.SelectNodes("Item"))
+        //            {
+        //                string title = item.GetAttribute("Title");
 
-                        if (!_template[subject][group].Contains(title))
-                            _template[subject][group].Add(title);
-                    }
+        //                if (!_template[subject][group].Contains(title))
+        //                    _template[subject][group].Add(title);
+        //            }
 
-                    //add extra item to subject item
-                    foreach (string extra_group in extraItem.Keys)
-                    {
-                        if (!_template[subject].ContainsKey(extra_group))
-                            _template[subject].Add(extra_group, new List<string>());
+        //            //add extra item to subject item
+        //            foreach (string extra_group in extraItem.Keys)
+        //            {
+        //                if (!_template[subject].ContainsKey(extra_group))
+        //                    _template[subject].Add(extra_group, new List<string>());
 
-                        foreach (string item in extraItem[extra_group])
-                        {
-                            if (!_template[subject][extra_group].Contains(item))
-                                _template[subject][extra_group].Add(item);
-                        }
-                    }
-                }
-            }
-        }
+        //                foreach (string item in extraItem[extra_group])
+        //                {
+        //                    if (!_template[subject][extra_group].Contains(item))
+        //                        _template[subject][extra_group].Add(item);
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
 
         private void btnExit_Click(object sender, EventArgs e)
         {
@@ -475,6 +479,8 @@ namespace ConductReportForGrade1to2
             public ClassRecord Class;
             public string PersonalDays, SickDays, SchoolDays;
             public List<string> SubjectList;
+
+            public Dictionary<string, Dictionary<string, List<string>>> Template = new Dictionary<string, Dictionary<string, List<string>>>();
 
             public ConductObj(ConductRecord record)
             {
@@ -541,6 +547,13 @@ namespace ConductReportForGrade1to2
                             if (!term2.ContainsKey(subj + "_" + group + "_" + title))
                                 term2.Add(subj + "_" + group + "_" + title, grade);
                         }
+
+                        if (!Template.ContainsKey(subj))
+                            Template.Add(subj, new Dictionary<string, List<string>>());
+                        if (!Template[subj].ContainsKey(group))
+                            Template[subj].Add(group, new List<string>());
+                        if (!Template[subj][group].Contains(title))
+                            Template[subj][group].Add(title);
                     }
                 }
             }
