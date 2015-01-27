@@ -184,15 +184,19 @@ namespace ConductReportForGrade1to2
                     {
                         if (!group_order.Contains(group))
                             group_order.Add(group);
+
+                        //item排序
+                        _template[subj][group].Sort(delegate(string x, string y)
+                        {
+                            return x.Length.CompareTo(y.Length);
+                        });
                     }
                 }
 
+                //group排序
                 group_order.Sort(delegate(string x, string y)
                 {
-                    string xx = x.PadLeft(40, '0');
-                    string yy = y.PadLeft(40, '0');
-
-                    return xx.CompareTo(yy);
+                    return x.Length.CompareTo(y.Length);
                 });
 
                 Dictionary<string, string> mergeDic = new Dictionary<string, string>();
