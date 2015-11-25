@@ -8,3 +8,11 @@ D:\GitHub2\ConductReport\ConductReport\obj\Debug\ConductReportForGrade1to2.pdb
 D:\GitHub2\ConductReport\ConductReport\obj\Debug\ConductReportForGrade1to2.csprojResolveAssemblyReference.cache
 C:\Users\Cloud\Documents\Visual Studio 2013\Projects\jh.ischool.starter\jh.ischool.starter\bin\Debug\ConductReportForGrade1to2.dll
 C:\Users\Cloud\Documents\Visual Studio 2013\Projects\jh.ischool.starter\jh.ischool.starter\bin\Debug\ConductReportForGrade1to2.pdb
+C:\Users\lelala\Documents\GitHub\ConductReportForGrade1to2\ConductReport\obj\Debug\ConductReportForGrade1to2.csprojResolveAssemblyReference.cache
+C:\Users\lelala\Documents\GitHub\ConductReportForGrade1to2\ConductReport\obj\Debug\ConductReportForGrade1to2.Properties.Resources.resources
+C:\Users\lelala\Documents\GitHub\ConductReportForGrade1to2\ConductReport\obj\Debug\ConductReportForGrade1to2.Reporter.resources
+C:\Users\lelala\Documents\GitHub\ConductReportForGrade1to2\ConductReport\obj\Debug\ConductReportForGrade1to2.csproj.GenerateResource.Cache
+C:\Users\lelala\Documents\GitHub\ConductReportForGrade1to2\ConductReport\obj\Debug\ConductReportForGrade1to2.dll
+C:\Users\lelala\Documents\GitHub\ConductReportForGrade1to2\ConductReport\obj\Debug\ConductReportForGrade1to2.pdb
+C:\Users\lelala\Documents\GitHub\ConductReportForGrade1to2\ConductReport\bin\Debug\ConductReportForGrade1to2.dll
+C:\Users\lelala\Documents\GitHub\ConductReportForGrade1to2\ConductReport\bin\Debug\ConductReportForGrade1to2.pdb
