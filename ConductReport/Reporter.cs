@@ -173,7 +173,18 @@ namespace ConductReportForGrade1to2
 
                 //科目顯示順序
                 List<string> subject_order = _template.Keys.ToList();
-                subject_order.Sort(Tool.GetSubjectCompare());
+                subject_order.Sort(delegate(string x, string y)
+                {
+                    int xi = subject_order.Contains(x) ? subject_order.LastIndexOf(x) : int.MaxValue - 1;
+                    int yi = subject_order.Contains(y) ? subject_order.LastIndexOf(y) : int.MaxValue - 1;
+
+                    if (x == "Homeroom")
+                        xi = int.MaxValue;
+                    if (y == "Homeroom")
+                        yi = int.MaxValue;
+
+                    return xi.CompareTo(yi);
+                });
 
                 //Group顯示順序
                 List<string> group_order = new List<string>();
@@ -258,7 +269,7 @@ namespace ConductReportForGrade1to2
                         bu.ParagraphFormat.Alignment = ParagraphAlignment.Center;
 
                         bu.EndRow();
-                        
+
                         foreach (string title in _template[subject][group])
                         {
                             string key = subject + "_" + group + "_" + title;
@@ -522,7 +533,7 @@ namespace ConductReportForGrade1to2
 
                 if (!SubjectList.Contains(subj))
                     SubjectList.Add(subj);
-                
+
                 //XML
                 if (_xdoc == null)
                     _xdoc = new XmlDocument();

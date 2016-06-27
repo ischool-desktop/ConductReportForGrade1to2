@@ -38,7 +38,8 @@
       <HintPath>library\Aspose.Words_201402.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="CourseGradeB">
+    <Reference Include="CourseGradeB, Version=1.0.0.50, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>library\CourseGradeB.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -116,6 +117,7 @@
   <ItemGroup>
     <Content Include="library\Aspose.Words_201402.dll" />
     <Content Include="library\CourseGradeB.dll" />
+    <Content Include="library\CourseGradeB.pdb" />
     <Content Include="library\DevComponents.DotNetBar2.dll" />
     <Content Include="library\FISCA.Data.dll" />
     <Content Include="library\FISCA.dll" />
