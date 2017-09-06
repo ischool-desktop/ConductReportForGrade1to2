@@ -44,13 +44,13 @@ namespace ConductReportForGrade1to2
             _schoolYear = int.Parse(K12.Data.School.DefaultSchoolYear);
             _semester = int.Parse(K12.Data.School.DefaultSemester);
 
-            for (int i = -2; i <= 2; i++)
-                cboSchoolYear.Items.Add(_schoolYear + i);
+            for (int i = 102; i <=103 ; i++)
+                cboSchoolYear.Items.Add(i);
 
             cboSemester.Items.Add(1);
             cboSemester.Items.Add(2);
 
-            cboSchoolYear.Text = _schoolYear + "";
+            cboSchoolYear.Text = "103";
             cboSemester.Text = _semester + "";
 
             //LoadTemplate();
